@@ -1,0 +1,295 @@
+<script src='https://www.google.com/recaptcha/api.js'></script>
+<meta charset="utf-8" /> 
+
+<html>
+
+<head>
+    <title>Stanford Linguistics - Rate the Sentences!</title>
+
+    <!--JS-->
+
+    <!-- external general utilities -->
+    <script src="resources/shared/js/jquery-1.11.1.min.js"></script>
+    <script src="resources/shared/full-projects/jquery-ui/jquery-ui.min.js"></script>
+    <script src="resources/shared/js/underscore-min.js"></script>
+    <!-- if you want to draw stuff: -->
+    <!-- <script src="resources/shared/js/raphael-min.js"></script> -->
+
+    <!-- cocolab experiment logic -->
+    <script src="resources/shared/js/exp-V2.js"></script>
+    <script src="resources/shared/js/stream-V2.js"></script>
+
+    <!-- cocolab general utilities -->
+    <script src="resources/shared/js/mmturkey.js "></script>
+    <script src="resources/shared/js/browserCheck.js"></script>
+    <script src="resources/shared/js/utils.js"></script>
+    <!-- if you want to draw cute creatures (depends on raphael): -->
+    <!-- <script src="resources/shared/js/ecosystem.js"></script> -->
+
+    <!-- experiment specific helper functions -->
+    <!-- <script src="resources/js/local-utils.js"></script> -->
+
+    <!--CSS-->
+    <link href="resources/shared/full-projects/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="resources/shared/css/cocolab-style.css" rel="stylesheet" type="text/css"/>
+    <link href="resources/css/local-style.css" rel="stylesheet" type="text/css"/>
+
+    <!-- experiment file -->
+    <script src="./../stimgen/stimgen.js"></script>
+    <script src="resources/index.js"></script>
+    <!-- script src="resources/lists/stims.js"></script -->
+    <!-- script src="resources/lists/fillers.js"></script -->
+    <script>var stims = eval(stimfile)</script>
+
+
+<!-- Load consent form
+<script>
+$(function(){
+  $("#consent-form").load("./resources/html/consent.html");
+});
+</script>
+-->
+
+</head>
+
+<body onload="init();">
+  <noscript>This task requires JavaScript.</noscript>
+
+<!-- <div class = "slide" id = "captcha">
+  <p> <br> <p>
+    <p>
+
+    <form target="_blank" id="verify_form" method="post">
+    <center>
+      <div class="g-recaptcha" data-sitekey="6LcN82wUAAAAAB8If5kypfwS95XKMvT0Yfvaz0wa"></div>
+    <p>
+    <input type="submit" name="submit" value="Begin HIT"><br>
+    </center>
+    </form>
+    <div class="loading" style="display:none"><p>Loading HIT...</div> 
+    <div class="captcha_error" style="display:none"><p><font color="FF0000">ERROR: You must pass the reCaptcha authentication before proceeding.</font></div> 
+  </div>
+
+<script>
+
+// Attach a submit handler to the form
+$( "#verify_form" ).submit(function( event ) {
+ 
+  // Stop form from submitting normally
+  event.preventDefault();
+
+  $(".captcha_error").hide()
+
+  $(".loading").show();
+
+  function looseJsonParse(obj){
+    return Function('"use strict";return (' + obj + ')')();
+  }
+ 
+  $.ajax({
+  type: "POST",
+  url: "https://stanford.edu/~bwaldon/cgi-bin/recaptcha_auth/verify.php/",
+  data : {"captcha" : grecaptcha.getResponse()},
+  success: function(data) {
+    console.log(looseJsonParse(data));
+    },
+  error: function() { 
+    console.log("Error: form not sent"); 
+    },  
+  });
+});
+
+</script>   -->
+
+ <div class="slide" id="i0" >
+    <p id="cocolab">Stanford Üniversitesi Dilbilim Fakültesi</p>
+    <p id="instruct-text">
+      Bu deney Türkçe'de bazı cümlelerin doğallığını araştırmaktadır.<br><br>
+      Yaklaşık 30 dakika sürecektir.<br><br>
+      Katılımınız için teşekkür ederiz!</p>
+    <center><button id="start_button" type="button">Devam</button></center>
+  </div>
+
+<!--Consent form used in Stanford linguistics department and is good for ling245.
+Otherwise, modified to whatever is required for you given your affliation.
+-->
+<div class="slide" id="consent">
+  <div id="consent_1">
+  <p><strong>Deney Protokolü</strong></p>
+  <p>Sizi dilin kullanımı ve kavranması hakkındaki bilimsel araştırmamıza katılmaya davet ediyoruz. Araştırma görevlisi sizden belirli cümleleri veya kelimeleri okumak, resimlerde gördüklerinizi tarif etmek, cümleler kurmak ve basit kelime oyunları oynamak gibi dil odaklı birtakım şeyler yapmanızı isteyecektir.</p>
+  <p>Bu deney hiçbir risk taşımamaktadır.</p>
+  <p>Katılımınız için size belirtilen miktarda ödeme yapılacaktır.</p>
+  <p>Eğer bu formu okuyup kendi iradenizle araştırmamıza katılmaya karar verirseniz, bilin ki katılımınız tamamen sizin isteğinize bağlıdır. İstediğiniz zaman halihazırda vasıf olduğunuz haklarınızdan mahrum edilmeden ve herhangi bir kayıp yaşamadan katılımınıza son verebilirsiniz. Belli başlı görevlere katılmayı reddetme hakkına sahipsiniz. Bu çalışmadan elde edilen bütün yayın ve sonuçlarda gizliliğiniz sağlanacaktır.</p>
+  <p>Kendi kayıtlarınız için bu sayfanın bir nüshasını yazdırabilirsiniz.</p>
+  </div>
+  <div id="consent_2">
+  <p><strong>İletişim Bilgileri</strong></p>
+  <p>Bu çalışma, çalışmanın prosedürü, riskleri ve faydaları hakkında herhangi soru, kaygı ve şikayetiniz varsa, +1(650)-725-9336 numaralı hattan Protokol Direktörlerinden Meghan Sumner ile iletişime geçebilirsiniz.</p>
+  <p>Eğer bu çalışmanın yürütülüş biçiminden hoşnut değilseniz, bir katılımcı olarak haklarınız hakkında kaygılarınız, şikayetleriniz, veya sorularınız varsa, araştırma takımından bağımsız bir yetkiliyle görüşmek için lütfen “Stanford Kurumsal İnceleme Kurulu” (IRB) ile +1(650)-723-2480'den veya +1(866)-680-2906 numaralı ücretsiz hattan irbata geçiniz.</p>
+  <p>Aynı şekilde, Stanford Kurumsal İnceleme Kurulu ile aşağıda belirtilen posta adresi aracılığıyla iletişime geçebilirsiniz:</p>
+  <p style="margin-left: 40px">
+    Stanford IRB, Stanford University,<br>
+    3000 El Camino Real, Five Palo Alto Square, 4th Floor,<br>
+    Palo Alto, CA 94306 USA.</p>
+  <p>Kendi kayıtlarınız için bu sayfanın bir nüshasını yazdırabilirsiniz.</p>
+  <p>Eğer bu deneye katılmak istiyorsanız, lütfen bir sonraki sayfaya devam edin.</p>
+  </div>
+     <center> <button onclick="_s.button()">Devam</button> </center>
+</div>
+
+<div class = "slide" id = "instructions">
+
+<!-- i>NOTE: There are many versions of this experiment currently online. Please only complete ONE version; you will not be paid for participating more than once. Thank you!</i></p -->
+
+<p><strong>Yönergeler</strong></p>
+
+<p>Bu deney Türkçedeki bazı cümlelerin doğallığını incelemektedir.</p>
+
+<p>Her sayfada bir cümle ve 1 puandan 7 puana kadar numaralandırılmış seçenekler göreceksiniz.</p>
+
+<p>Bu günlük hayatta konuşulan Türkçe'yi inceleyen bir çalışmadır. Göreceğiniz cümlelerin yazılı dile veya okulda öğrendiğiniz yazım ve konuşma kurallarına göre değil, günlük konuşma diline göre değerlendirin. Bir arkadaşınız, kardeşiniz, kuzeniniz, veya sokakta karşılaştığınız biri böyle bir cümle kursa kulağınıza garip mi yoksa doğal mı gelirdi?</p>
+
+<p>Cümleyi okuyuduktan sonra 1 puan (doğal değil) ile 7 (puan) arasında ne kadar doğal olduğuna bir puan verin.</p>
+
+<!--p >NOTE: After some dialogues, you'll be asked a short true/false comprehension question about what you've just read. These serve as attention checks; failing too many of them can affect your compensation. Thanks for participating!</p -->
+
+<center><button onclick="_s.button()">Devam</button></center>
+</div>
+ 
+
+  <div id="thanks" class="slide" >
+    <p  class="big">Katılımınız için teşekkür ederiz.</p>
+  </div>
+
+<div class = "slide" id = "trial">
+
+<hr>
+
+<p class="prompt"></p>
+<p class="attcheck" hidden></p>
+
+<hr>
+
+<style>
+
+.vertical-radio-buttons div {
+  display: block;
+  padding: 0 0 0px 0px;
+  clear: both;
+  text-align : left;
+  margin: 0 auto;
+}
+
+.vertical-radio-buttons label {
+  font-size: rem-calc(16);
+}
+
+.vertical-radio-buttons p {
+  text-align: left;
+}
+
+.vertical-radio-buttons input {
+  float: left;
+  width: 20px;
+  margin-top: 6px; // vertically align radio button with text
+  padding: 0;
+}
+
+</style>
+
+<p>Yukarıdaki cümle kulağınıza ne kadar doğal geliyor?</p>
+<div class="vertical-radio-buttons" style = "padding-left:50;">
+
+<div>
+  <input type="radio" name="rating" value=7> 7 - oldukça doğal<br>
+  <input type="radio" name="rating" value=6> 6<br>
+  <input type="radio" name="rating" value=5> 5 <br>
+  <input type="radio" name="rating" value=4> 4<br>
+  <input type="radio" name="rating" value=3> 3<br>
+  <input type="radio" name="rating" value=2> 2 <br>
+  <input type="radio" name="rating" value=1> 1 - hiç doğal değil
+</div> 
+</div>
+
+<div class="truefalse-buttons" style = "padding-left:50;" hidden>
+<p>The <strong>bolded sentence&nbsp;</strong>is:</p>
+
+<div>
+  <input type="radio" name="truefalse" value="true"> True <br>
+  <input type="radio" name="truefalse" value="false"> False <p>
+</div> 
+</div>
+
+<p>
+
+<center><button onclick="_s.button()">Devam</button></center>
+
+<div class = "error" style="display:none"><p> <center>Bir sonraki sayfaya geçmeden önce lütfen soruya yanıt verin.</center></p>
+
+</div>
+ 
+  <div class="slide"  id="subj_info">
+    <div class="long_form">
+      <div class="subj_info_title">Additional information</div>
+      <p class="info">Answering these questions is optional, but will help us understand your answers.</p>
+      <p>Did you read the instructions and do you think you did the HIT correctly?</p>
+      <label><input type="radio"  name="assess" value="No"/>No</label>
+      <label><input type="radio"  name="assess" value="Yes"/>Yes</label>
+      <label><input type="radio"  name="assess" value="Confused"/>I was confused</label>
+
+      <p>Were there any problems or bugs in the experiment?</p>
+      <textarea id="problems" rows="2" cols="50"></textarea>
+
+      <p>What do you think is a fair price for the work you did?</p>
+      <textarea id="fairprice" rows="1" cols="10"></textarea>
+
+      <p>Gender:
+        <select id="gender">
+          <label><option value=""/></label>
+          <label><option value="Male"/>Male</label>
+          <label><option value="Female"/>Female</label>
+          <label><option value="Other"/>Other</label>
+        </select>
+      </p>
+
+      <p>Age: <input type="text" id="age"/></p>
+
+      <p>Level Of Education:
+        <select id="education">
+          <label><option value="-1"/></label>
+          <label><option value="0"/>Some High School</label>
+          <label><option value="1"/>Graduated High School</label>
+          <label><option value="2"/>Some College</label>
+          <label><option value="3"/>Graduated College</label>
+          <label><option value="4"/>Hold a higher degree</label>
+        </select>
+      </p>
+
+      <p>Native Language: <input type="text" id="language"/></p>
+      <label>(the language(s) spoken at home when you were a child)</label>
+
+      <p>Did you enjoy the hit?</p>
+      <select id="enjoyment">
+        <label><option value="-1"></option></label>
+        <label><option value="0">Worse than the Average HIT</option></label>
+        <label><option value="1" >An Average HIT</option></label>
+        <label><option value="2">Better than average HIT</option></label>
+      </select>
+
+      <p>What do you think this experiment was testing?</p> 
+      <textarea id="comments" rows="3" cols="50"></textarea>
+      <br/>
+      <button onclick="_s.submit()">Submit</button>
+    </div>
+  </div>
+
+  <div class="progress">
+    <span>Progress:</span>
+    <div class="bar-wrapper">
+      <div class="bar" width="0%">
+      </div>
+    </div> 
+  </div>
+
+</body>
+</html>

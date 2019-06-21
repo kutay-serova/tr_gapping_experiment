@@ -1,0 +1,19 @@
+.slider {
+  /* default is width 400 and margin 10 */
+	width: 400;
+	margin: 10px;
+}
+
+img {
+   padding: 10px;
+}
+
+.slide {
+	padding: 50px;
+}
+
+.hangingindent {
+	margin-left: 5em;
+	margin-top: -1.1em;
+  	margin-bottom: 0px;
+}
