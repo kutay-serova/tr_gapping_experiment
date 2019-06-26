@@ -12,7 +12,7 @@ var feature_lib = {
 
 var lexical_arguments = {
 	"drink" : ["fruit_juice", "tea", "coffee"],
-	"go" : ["to_Ankara", "to_Adana", "to_America"]
+	"go" : ["to_Ankara", "to_Adana", "to_Trabzon"]
 };
 
 var argument_forms = {
@@ -21,7 +21,7 @@ var argument_forms = {
 	"coffee" : "kahve",
 	"to_Ankara" : "Ankara'ya",
 	"to_Adana" : "Adana'ya",
-	"to_America" : "Amerika'ya"
+	"to_Trabzon" : "Trabzon'a"
 };
 
 var verb_forms = {
@@ -143,11 +143,11 @@ function generate_stim(features) {
 
 	 			// VARIANT: include contrastive dA
 	 			if(has_gap){
-	 				var stim_sent = `${first_subj_form} Çarşamba günü ${first_arg_form} `
-	 				+ `ve dün de ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form}.`;
+	 				var stim_sent = `${first_subj_form} Çarşamba günü ${first_arg_form}, `
+	 				+ `dün de ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form}.`;
 	 			}else{
-	 				var stim_sent = `${first_subj_form} Çarşamba günü ${first_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form} `
-	 				+ `ve dün de ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${last_agr_form}.`;
+	 				var stim_sent = `${first_subj_form} Çarşamba günü ${first_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form}, `
+	 				+ `dün de ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${last_agr_form}.`;
 	 			}
 	 			stim_sent = capitalize(stim_sent);
 	 		}else{
@@ -178,11 +178,11 @@ function generate_stim(features) {
 
 	 			// VARIANT: include contrastive dA
 	 			if(has_gap){
-	 				var stim_sent = `${first_subj_form} ${first_arg_form} `
-	 				+ `ve ${last_subj_form} ${contr_focus_form} ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${last_agr_form}.`;
+	 				var stim_sent = `${first_subj_form} ${first_arg_form}, `
+	 				+ `${last_subj_form} ${contr_focus_form} ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${last_agr_form}.`;
 	 			}else{
-	 				var stim_sent = `${first_subj_form} ${first_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form} `
-	 				+ `ve ${last_subj_form} ${contr_focus_form} ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${last_agr_form}.`;
+	 				var stim_sent = `${first_subj_form} ${first_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form}, `
+	 				+ `${last_subj_form} ${contr_focus_form} ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${last_agr_form}.`;
 	 			}
 	 			stim_sent = capitalize(stim_sent);
 	 		}
@@ -214,8 +214,8 @@ function generate_stim(features) {
  			var contr_focus_form = (last_subj == 3 ? "da" : "de");
 
  			// VARIANT: include contrastive dA
- 			var stim_sent = `${first_subj_form} ${first_arg_form} `
- 				+ `ve ${last_subj_form} ${contr_focus_form} ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form}.`;
+ 			var stim_sent = `${first_subj_form} ${first_arg_form}, `
+ 				+ `${last_subj_form} ${contr_focus_form} ${last_arg_form} ${verb_form}${aspect_form}${tense_form}${first_agr_form}.`;
  			stim_sent = capitalize(stim_sent);
 	 		break;
 	 	case 'filler-licensed-NPI':
@@ -246,8 +246,8 @@ function generate_stim(features) {
  			var contr_focus_form = (last_subj == 3 ? "da" : "de");
 
  			// VARIANT: include contrastive dA
- 			var stim_sent = `${first_subj_form} hiç ${first_arg_form} `
- 				+ `ve ${last_subj_form} ${contr_focus_form} hiç ${last_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${last_agr_form}.`;
+ 			var stim_sent = `${first_subj_form} hiç ${first_arg_form},`
+ 				+ ` ${last_subj_form} ${contr_focus_form} hiç ${last_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${last_agr_form}.`;
  			stim_sent = capitalize(stim_sent);
 	 		break;
 	 	default:
@@ -349,27 +349,27 @@ function generate_stim_set(n_fillers = {'filler-first-conj-agreement':3,'filler-
 		var f_subj = feature_lib['first_conj_subject'][i_f_subj];
 		for(i_l_subj in feature_lib['last_conj_subject']){
 			if(i_f_subj == i_l_subj){continue;};
-			for(i_pred_type in feature_lib['predicate_type']){
-				var pred_type = feature_lib['predicate_type'][i_pred_type];
-				var l_subj = feature_lib['last_conj_subject'][i_l_subj];
-				var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
-				var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
-				var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
-				var has_neg = false; // IMPORTANT for LICENSED NPI
-				var has_gap = true; // ???
-				var stim_feats = {
-					"stim_type" : stim_type,
-					
-					"predicate_type" : pred_type,
-					"first_conj_subj" : f_subj,
-					"last_conj_subj" : l_subj,
-					"has_gapping" : has_gap,
-					"has_negation" : has_neg,
-					"tense" : tense,
-					"lexical_verb" : verb			
-				}
-				fillers_B.push(stim_feats);
+			//for(i_pred_type in feature_lib['predicate_type']){
+			//	var pred_type = feature_lib['predicate_type'][i_pred_type];
+			var l_subj = feature_lib['last_conj_subject'][i_l_subj];
+			var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
+			var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
+			var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
+			var has_neg = false; // IMPORTANT for LICENSED NPI
+			var has_gap = true; // ???
+			var stim_feats = {
+				"stim_type" : stim_type,
+				
+				"predicate_type" : pred_type,
+				"first_conj_subj" : f_subj,
+				"last_conj_subj" : l_subj,
+				"has_gapping" : has_gap,
+				"has_negation" : has_neg,
+				"tense" : tense,
+				"lexical_verb" : verb			
 			}
+			fillers_B.push(stim_feats);
+			//}
 		}
 	}
 	// select random fillers from list
@@ -386,27 +386,27 @@ function generate_stim_set(n_fillers = {'filler-first-conj-agreement':3,'filler-
 		var f_subj = feature_lib['first_conj_subject'][i_f_subj];
 		for(i_l_subj in feature_lib['last_conj_subject']){
 			if(i_f_subj == i_l_subj){continue;};
-			for(i_pred_type in feature_lib['predicate_type']){
-				var pred_type = feature_lib['predicate_type'][i_pred_type];
-				var l_subj = feature_lib['last_conj_subject'][i_l_subj];
-				var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
-				var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
-				var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
-				var has_neg = true; // IMPORTANT for LICENSED NPI
-				var has_gap = true; // ???
-				var stim_feats = {
-					"stim_type" : stim_type,
-					
-					"predicate_type" : pred_type,
-					"first_conj_subj" : f_subj,
-					"last_conj_subj" : l_subj,
-					"has_gapping" : has_gap,
-					"has_negation" : has_neg,
-					"tense" : tense,
-					"lexical_verb" : verb			
-				}
-				fillers_C.push(stim_feats);
+			//for(i_pred_type in feature_lib['predicate_type']){
+			//	var pred_type = feature_lib['predicate_type'][i_pred_type];
+			var l_subj = feature_lib['last_conj_subject'][i_l_subj];
+			var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
+			var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
+			var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
+			var has_neg = true; // IMPORTANT for LICENSED NPI
+			var has_gap = true; // ???
+			var stim_feats = {
+				"stim_type" : stim_type,
+				
+				"predicate_type" : pred_type,
+				"first_conj_subj" : f_subj,
+				"last_conj_subj" : l_subj,
+				"has_gapping" : has_gap,
+				"has_negation" : has_neg,
+				"tense" : tense,
+				"lexical_verb" : verb			
 			}
+			fillers_C.push(stim_feats);
+			//}
 		}
 	}
 	// select random fillers from list
@@ -415,7 +415,7 @@ function generate_stim_set(n_fillers = {'filler-first-conj-agreement':3,'filler-
 		stimuli.push(generate_stim(sampled_fillers_C[i]));
 	}
 
-	//return sample(stimuli); //returns shuffled stimuli set
-	return stimuli; //return unshuffled stimuli set
+	return sample(stimuli); //returns shuffled stimuli set
+	//return stimuli; //return unshuffled stimuli set
 }
 
