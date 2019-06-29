@@ -254,7 +254,7 @@ function generate_stim(features) {
  			// VARIANT: include contrastive dA
  			//var stim_sent = `${first_subj_form} hiç ${first_arg_form},`
  			//	+ ` ${last_subj_form} ${contr_focus_form} hiç ${last_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${last_agr_form}.`;
- 			var stim_sent = `${first_subj_form} hiç ${first_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${first_agr_form}.`
+ 			var stim_sent = `$Bugüne kadar hiç ${first_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${first_agr_form}.`
  			stim_sent = capitalize(stim_sent);
 	 		break;
 	 	default:
