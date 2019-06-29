@@ -89,6 +89,11 @@ function shuffle(array) {
  */
 function sample(array, n=0) {
 	if(n==0){n=array.length;}
+	if(n > array.length){
+		console.log("ERROR: SAMPLING MORE ELEMENTS THAN IN ARRAY");
+		console.log("array = ", array);
+		console.log("n = ", n);
+	}
 	new_arr = [...array];
 	shuffle(new_arr);
 	return new_arr.slice(0,n);
@@ -221,11 +226,11 @@ function generate_stim(features) {
 	 	case 'filler-licensed-NPI':
 	 	case 'filler-unlicensed-NPI':
 	 		var first_subj = features['first_conj_subj'];
- 			var last_subj = features['last_conj_subj'];
+ 			//var last_subj = features['last_conj_subj'];
  			var first_subj_form = subject_forms[first_subj];
- 			var last_subj_form = subject_forms[last_subj];
+ 			//var last_subj_form = subject_forms[last_subj];
  			var first_agr_form = agreement_forms[first_subj];
- 			var last_agr_form = agreement_forms[last_subj];
+ 			//var last_agr_form = agreement_forms[last_subj];
 
  			var has_gap = features['has_gapping'];
  			
@@ -236,18 +241,20 @@ function generate_stim(features) {
  			var verb_form = verb_forms[lex_verb];
  			
 			var lex_args = get_lexical_arguments(lex_verb);
- 			var first_arg = lex_args[0], last_arg = lex_args[1];
+ 			var first_arg = lex_args[0];
+ 			var last_arg = "NA";
  			var first_arg_form = argument_forms[first_arg];
- 			var last_arg_form = argument_forms[last_arg];
+ 			//var last_arg_form = argument_forms[last_arg];
 
  			var aspect_form = aspect_forms[features['predicate_type']];
  			var tense_form = get_tense_form(negation=neg_form,aspect=aspect_form,tense=features['tense']);
 
- 			var contr_focus_form = (last_subj == 3 ? "da" : "de");
+ 			//var contr_focus_form = (last_subj == 3 ? "da" : "de");
 
  			// VARIANT: include contrastive dA
- 			var stim_sent = `${first_subj_form} hiç ${first_arg_form},`
- 				+ ` ${last_subj_form} ${contr_focus_form} hiç ${last_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${last_agr_form}.`;
+ 			//var stim_sent = `${first_subj_form} hiç ${first_arg_form},`
+ 			//	+ ` ${last_subj_form} ${contr_focus_form} hiç ${last_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${last_agr_form}.`;
+ 			var stim_sent = `${first_subj_form} hiç ${first_arg_form} ${verb_form}${neg_form}${aspect_form}${tense_form}${first_agr_form}.`
  			stim_sent = capitalize(stim_sent);
 	 		break;
 	 	default:
@@ -276,6 +283,7 @@ function generate_stim_set(n_fillers = {'filler-first-conj-agreement':3,'filler-
 	stimuli = [];
 
 	// generate target stimuli
+	// 36 stimuli
 	for(i_f_subj in feature_lib['first_conj_subject']){
 		var f_subj = feature_lib['first_conj_subject'][i_f_subj];
 		for(i_l_subj in feature_lib['last_conj_subject']){
@@ -308,7 +316,8 @@ function generate_stim_set(n_fillers = {'filler-first-conj-agreement':3,'filler-
 	}
 
 	// generate bad filler: gapping w/ first-subject agreement
-	var fillers_A = [];
+	// max 3x2 = 6 stimuli, non-repeating first_subj & last_subj combinations
+	var fillers = [];
 	var stim_type = 'filler-first-conj-agreement';
 	// make sure each filler has a different subject combinations (different per stim), and non-matching subjects (no 1-1, 2-2, 3,3)
 	for(i_f_subj in feature_lib['first_conj_subject']){
@@ -332,87 +341,85 @@ function generate_stim_set(n_fillers = {'filler-first-conj-agreement':3,'filler-
 				"tense" : tense,
 				"lexical_verb" : verb			
 			}
-			fillers_A.push(stim_feats);
+			fillers.push(stim_feats);
 		}
 	}
 	// select random fillers from list
-	var sampled_fillers_A = sample(fillers_A, n=n_fillers[stim_type]);
-	for(i in sampled_fillers_A){
-		stimuli.push(generate_stim(sampled_fillers_A[i]));
+	var sampled_fillers = sample(fillers, n=n_fillers[stim_type]);
+	for(i in sampled_fillers){
+		stimuli.push(generate_stim(sampled_fillers[i]));
 	}
 
 	// genereate bad filler: unlicensed NPI
-	var fillers_B = [];
+	// max 12 sentences, 2 x (each subject {1,2,3} in both pred_types {verbal, participial})
+	var fillers = [];
 	var stim_type = 'filler-unlicensed-NPI';
-	// make sure each filler has a different subject-predice type combinations (different per stim), and non-matching subjects (no 1-1, 2-2, 3,3)
 	for(i_f_subj in feature_lib['first_conj_subject']){
 		var f_subj = feature_lib['first_conj_subject'][i_f_subj];
-		for(i_l_subj in feature_lib['last_conj_subject']){
-			if(i_f_subj == i_l_subj){continue;};
-			//for(i_pred_type in feature_lib['predicate_type']){
-			//	var pred_type = feature_lib['predicate_type'][i_pred_type];
-			var l_subj = feature_lib['last_conj_subject'][i_l_subj];
-			var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
-			var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
-			var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
-			var has_neg = false; // IMPORTANT for LICENSED NPI
-			var has_gap = true; // ???
-			var stim_feats = {
-				"stim_type" : stim_type,
-				
-				"predicate_type" : pred_type,
-				"first_conj_subj" : f_subj,
-				"last_conj_subj" : l_subj,
-				"has_gapping" : has_gap,
-				"has_negation" : has_neg,
-				"tense" : tense,
-				"lexical_verb" : verb			
+		for (var i = 0; i < 2; i++){
+			for(i_pred_type in feature_lib['predicate_type']){
+				var pred_type = feature_lib['predicate_type'][i_pred_type];
+				var l_subj = "NA";
+				//var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
+				var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
+				var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
+				var has_neg = false; // IMPORTANT for UNLICENSED NPI
+				var has_gap = false; // ???
+				var stim_feats = {
+					"stim_type" : stim_type,
+					
+					"predicate_type" : pred_type,
+					"first_conj_subj" : f_subj,
+					"last_conj_subj" : l_subj,
+					"has_gapping" : has_gap,
+					"has_negation" : has_neg,
+					"tense" : tense,
+					"lexical_verb" : verb			
+				}
+				fillers.push(stim_feats);
 			}
-			fillers_B.push(stim_feats);
-			//}
 		}
 	}
 	// select random fillers from list
-	var sampled_fillers_B = sample(fillers_B, n=n_fillers[stim_type]);
-	for(i in sampled_fillers_B){
-		stimuli.push(generate_stim(sampled_fillers_B[i]));
+	var sampled_fillers = sample(fillers, n=n_fillers[stim_type]);
+	for(i in sampled_fillers){
+		stimuli.push(generate_stim(sampled_fillers[i]));
 	}
 
 	// genereate good filler: licensed NPI
-	var fillers_C = [];
-	stim_type = 'filler-licensed-NPI';
-	// make sure each filler has a different subject-predice type combinations (different per stim), and non-matching subjects (no 1-1, 2-2, 3,3)
+	// max 12 sentences, 2 x (each subject {1,2,3} in both pred_types {verbal, participial})
+	var fillers = [];
+	var stim_type = 'filler-licensed-NPI';
 	for(i_f_subj in feature_lib['first_conj_subject']){
 		var f_subj = feature_lib['first_conj_subject'][i_f_subj];
-		for(i_l_subj in feature_lib['last_conj_subject']){
-			if(i_f_subj == i_l_subj){continue;};
-			//for(i_pred_type in feature_lib['predicate_type']){
-			//	var pred_type = feature_lib['predicate_type'][i_pred_type];
-			var l_subj = feature_lib['last_conj_subject'][i_l_subj];
-			var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
-			var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
-			var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
-			var has_neg = true; // IMPORTANT for LICENSED NPI
-			var has_gap = true; // ???
-			var stim_feats = {
-				"stim_type" : stim_type,
-				
-				"predicate_type" : pred_type,
-				"first_conj_subj" : f_subj,
-				"last_conj_subj" : l_subj,
-				"has_gapping" : has_gap,
-				"has_negation" : has_neg,
-				"tense" : tense,
-				"lexical_verb" : verb			
+		for (var i = 0; i < 2; i++){
+			for(i_pred_type in feature_lib['predicate_type']){
+				var pred_type = feature_lib['predicate_type'][i_pred_type];
+				var l_subj = "NA";
+				//var pred_type = feature_lib['predicate_type'][Math.floor(Math.random() * feature_lib['predicate_type'].length)];
+				var tense = feature_lib['tense'][Math.floor(Math.random() * feature_lib['tense'].length)];
+				var verb = feature_lib['lexical_verb'][Math.floor(Math.random() * feature_lib['lexical_verb'].length)];
+				var has_neg = true; // IMPORTANT for UNLICENSED NPI
+				var has_gap = false; // ???
+				var stim_feats = {
+					"stim_type" : stim_type,
+					
+					"predicate_type" : pred_type,
+					"first_conj_subj" : f_subj,
+					"last_conj_subj" : l_subj,
+					"has_gapping" : has_gap,
+					"has_negation" : has_neg,
+					"tense" : tense,
+					"lexical_verb" : verb			
+				}
+				fillers.push(stim_feats);
 			}
-			fillers_C.push(stim_feats);
-			//}
 		}
 	}
 	// select random fillers from list
-	var sampled_fillers_C = sample(fillers_C, n=n_fillers[stim_type]);
-	for(i in sampled_fillers_C){
-		stimuli.push(generate_stim(sampled_fillers_C[i]));
+	var sampled_fillers = sample(fillers, n=n_fillers[stim_type]);
+	for(i in sampled_fillers){
+		stimuli.push(generate_stim(sampled_fillers[i]));
 	}
 
 	return sample(stimuli); //returns shuffled stimuli set
